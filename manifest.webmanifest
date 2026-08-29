@@ -1,0 +1,25 @@
+{
+  "name": "Dust Index \u2014 Burning Man 2026",
+  "short_name": "Dust Index",
+  "description": "Offline schedule for Burning Man 2026: playa events, the RSL music guide and camp lineups.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0912",
+  "theme_color": "#0b0912",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
