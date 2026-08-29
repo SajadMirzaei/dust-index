@@ -89,6 +89,18 @@ body::before {
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--el); outline-offset: 3px; border-radius: 4px; }
 
+/* ---------- build stamp --------------------------------------------- */
+
+.built {
+  padding: 7px 14px 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink-3);
+}
+
 /* ---------- day rail ------------------------------------------------ */
 
 .rail {

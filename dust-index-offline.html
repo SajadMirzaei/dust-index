@@ -100,6 +100,18 @@ body::before {
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--el); outline-offset: 3px; border-radius: 4px; }
 
+/* ---------- build stamp --------------------------------------------- */
+
+.built {
+  padding: 7px 14px 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink-3);
+}
+
 /* ---------- day rail ------------------------------------------------ */
 
 .rail {
@@ -735,6 +747,7 @@ a.btn.link { text-decoration: none; display: inline-block; color: var(--ink-2); 
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAE5ElEQVR4nO3dP3ITQRBGcVnlhILIF5jIEXfgMByMw3AHIqK5AzmUAldRxpZZS9r++s37pfyTt9+2xka27j5+ePh9kCCO1Q9AuiaDFopBC8WghWLQQjFooRi0UAxaKAYtFIMWikELxaCFYtBCMWihGLRQDFooBi0UgxaKQQvFoIVi0EIxaKEYtFAMWij31Q+AYv78ftGfH49frvZYVnbnT07aN9ytDH0bgw4L+C0Gfp5BN4j4Ncb9L4MOOQNX//sUywf9npD2iif5saVaNugtsaRE0vEx7225oP83ivQgKB/HtS0T9P8E0HX45I9tK3zQKw17LvSxLhn0uQHTBzsX/diRQb+1qcgDXf064IJedTOdMxe6JqigXxscbWjvNRe4PoigV9pAl5rwa9U+6BW2zi1M6HVr/QJ/6lD2MF65Rl1emIUL2pgvN4BRtzxyvHTB3cpe05Yb2phvY7ywrTtu6lZBG/NtDUDUbYI25n2M5lG3CNqY9zUaRx0ftDHXGE2jjg7amGuNhlFHB/2cX5rzmrcNOn0TrGwGzyYyaI8aWUajo0dc0MacaTSJOi7o5zw35xgNXvQVFXTiHa9eM4sJ2qNGDyP86BETdMent1WN4NlEBJ10h6v3DCOC7rQBlD2j8qBT7mwxZlkedJc7Xz1mdUy6oxMvkM57PrPqLR23oaWWQVffyWLONmZDe9zoawQdFUuCdjvzzaItHbGhk+5w9Z5hRNBS26A9bqxjFhw7yjd0ylOVGLMsD1pqG7THjfXMnY8dx9WfosSaqUcOoRi0UO73+odWOz//+vr57K9/+vbjsIr58/tuR5Hdgk47a1WF/Pz3EcMej1/KFlhZ0KuGvFLYFTxDF8Z87b9DBh0VolFfzg0dFqBRNwia+L2DtwyPEPUo+l5DN7RQDDp0gxK2dAWDFopBB29Ot/R2Bi0UgxaKQQvFoIVi0EIxaKEYtFAMeqM9X7fsa6S3M2ihGHTo5nQ7v49BC+W44vtwpG9QwnaeRa+Bd0OHhUeIuZJBBwVozJcz6JAQjfk6/LkcV/IU5NbXMBsyJOg9fzxUYtjkkGfhJ/33K/x4qArkYLfac3F5hhaKQQsl6s3r1d9c6c3riZ8EKmvmHjmEclz9KUqsWe4etMeOdYyCI2b5hpZwQSc8VYkxw5KgPXbwjaKvaEVs6KQ7XL1nVxa0W5prFP5/Q8yGlnBvXp/01KWe758Tt6GNuo8ZuIDKg66+o8WaZXnQXe589ZhRRNAJd7YYM4wIutMG0CF6NsfkOzz5wq1qvjCTlO0cFXTahVHPmUUF/RK3dI7Z4BkzLmiPHplm+FEjNugTo84ym8QcG3TyBdMhejaxQXc9w9HMZtc8OmiPHrVmo6NGi6BPjLrGbBhzi6BPjHpfs2nMbYI+Mep9zMYxtwr6xKhvazaPuV3QJ0Z9GxMQ88ndxw8Pvw+gLyd1HEKlCbuO7Tb0Wxe829dNK01YzK2DPjHq95vAmNsHTRhAkgG4lvekQTxtHcJg9jRA16vtJ4W63AS+tZ5BC6X9GVr6m0ELxaCFYtBCMWihGLRQDFooBi0UgxaKQQvFoIVi0EIxaKEYtFAMWigGLRSDFopBC8WghWLQQjFooRi0UAxaKAYtFIMWikELxaCFYtBCMWihGLRQDFooBi0UgxaKQQvFoIVi0DqQ/AGNi87fIzJEMQAAAABJRU5ErkJggg==">
 </head>
 <body>
+<div class="built">Updated Aug 29, 2026 - 4:56 AM</div>
 
 <div class="rail" id="rail" role="tablist" aria-label="Nights"></div>
 <div class="tools" id="tools"></div>
