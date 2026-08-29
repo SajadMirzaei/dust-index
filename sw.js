@@ -1,5 +1,5 @@
 /* Cache everything on install so the app opens with no network at all. */
-const CACHE = "dust-index-20260829-0456";
+const CACHE = "dust-index-20260829-0506";
 const ASSETS = [
   "./", "./index.html", "./app.css", "./app.js", "./data.js",
   "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"
@@ -23,6 +23,26 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+
+  // Page loads go network-first: with signal you always get the newest
+  // version on the FIRST open (and the fresh copy replaces the cached one);
+  // without signal, the cache answers. Assets stay cache-first — they are
+  // versioned by the cache name, so they only change when the SW does.
+  if (e.request.mode === "navigate") {
+    e.respondWith(
+      fetch(e.request).then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => { c.put("./", copy.clone()); c.put("./index.html", copy); });
+        }
+        return res;
+      }).catch(() =>
+        caches.match(e.request, { ignoreSearch: true })
+          .then((hit) => hit || caches.match("./index.html")))
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then((hit) => {
       if (hit) return hit;
