@@ -129,7 +129,7 @@
   EV.forEach(function (e) { if (sajiTag(e)) SAJI_IDS.push(e.i); });
 
   // What counts as starred right now: your own stars, plus everything on
-  // Saji's list while the "Saji's plan" toggle is on.
+  // Saji's list while the "Saji's picks" toggle is on.
   function isStarred(e) {
     if (S.stars.has(e.i)) return true;
     return S.sajiPlan && sajiTag(e) !== null;
@@ -152,6 +152,7 @@
     if (f.food && (!e.tg || e.tg.indexOf("food") < 0)) return false;
     if (f.drink && (!e.tg || e.tg.indexOf("drink") < 0)) return false;
     if (f.adult && (!e.tg || e.tg.indexOf("adult") < 0)) return false;
+    if (S.guideFilter && !(e.g && e.g.indexOf(S.guideFilter) > -1)) return false;
     if (f.saji && !sajiTag(e)) return false;
     if (f.sjmust && sajiTag(e) !== "sj-must") return false;
     if (f.sjshould && sajiTag(e) !== "sj-should") return false;
@@ -242,6 +243,21 @@
       meta.appendChild(el("span", null, e.l));
     }
     main.appendChild(meta);
+
+    // Art cars and landmarks link to their Guide entry; camps don't need it,
+    // they have a street address right there.
+    if (e.g && e.g.length) {
+      var gl = el("div", "glinks");
+      e.g.forEach(function (gid) {
+        var entry = GUIDE_BY_ID[gid];
+        if (!entry) return;
+        var a = el("button", "gl " + entry.kind, (entry.kind === "car" ? "🚌 " : "📍 ") + entry.name);
+        a.title = "Open the Guide: " + entry.name;
+        a.onclick = function (ev) { ev.stopPropagation(); goGuide(gid); };
+        gl.appendChild(a);
+      });
+      main.appendChild(gl);
+    }
 
     if (e.n) main.appendChild(el("div", "note", e.n));
 
@@ -510,6 +526,70 @@
 
   /* ---------- chrome -------------------------------------------------- */
 
+  /* ---------- guide: art cars & landmarks ----------------------------- */
+
+  var GUIDE = BM.guide || { kinds: {}, entries: [] };
+  var GUIDE_BY_ID = {};
+  GUIDE.entries.forEach(function (g) { GUIDE_BY_ID[g.id] = g; });
+
+  function goGuide(gid) {
+    S.view = "guide";
+    S.guideTo = gid;
+    window.scrollTo(0, 0);
+    render();
+  }
+
+  function viewGuide(root) {
+    var strip = el("div", "strip");
+    strip.appendChild(el("h1", null, "THE GUIDE"));
+    strip.appendChild(el("div", "sub",
+      GUIDE.entries.length + " art cars, installations & landmarks · tap a 🚌/📍 on any event to land here"));
+    root.appendChild(strip);
+
+    // events linked to each entry, for the counts
+    var linked = {};
+    EV.forEach(function (e) {
+      (e.g || []).forEach(function (gid) { linked[gid] = (linked[gid] || 0) + 1; });
+    });
+
+    Object.keys(GUIDE.kinds).forEach(function (kind) {
+      var list = GUIDE.entries.filter(function (g) { return g.kind === kind; });
+      if (!list.length) return;
+      root.appendChild(el("div", "sect", GUIDE.kinds[kind]));
+      var wrap = el("div", "guide");
+      list.forEach(function (g) {
+        var card = el("section", "gcard " + g.kind);
+        card.id = "g-" + g.id;
+        var head = el("div", "ghead");
+        head.appendChild(el("h2", null, g.name));
+        if (linked[g.id]) head.appendChild(el("span", "gcount", linked[g.id] + " events"));
+        card.appendChild(head);
+        var where = el("div", "gwhere");
+        where.appendChild(el("span", "glab", "Where"));
+        where.appendChild(el("span", null, g.where));
+        card.appendChild(where);
+        if (g.desc) card.appendChild(el("p", "gdesc", g.desc));
+        if (g.week) {
+          var wk = el("div", "gweek");
+          wk.appendChild(el("span", "glab", "This week"));
+          wk.appendChild(el("span", null, g.week));
+          card.appendChild(wk);
+        }
+        if (linked[g.id]) {
+          var see = el("button", "btn", "See its events");
+          see.onclick = function () {
+            S.view = "all"; S.day = ALL; S.q = "";
+            S.guideFilter = g.id; S.limit = 300;
+            window.scrollTo(0, 0); render();
+          };
+          card.appendChild(see);
+        }
+        wrap.appendChild(card);
+      });
+      root.appendChild(wrap);
+    });
+  }
+
   function renderRail() {
     var rail = $("#rail");
     rail.innerHTML = "";
@@ -594,6 +674,13 @@
       };
       chips.appendChild(b);
     });
+    // Arrived from a Guide entry's "See its events": one removable chip.
+    if (S.guideFilter && GUIDE_BY_ID[S.guideFilter]) {
+      var gf = el("button", "chip gfilter", "📍 " + GUIDE_BY_ID[S.guideFilter].name + "  ✕");
+      gf.setAttribute("aria-pressed", "true");
+      gf.onclick = function () { S.guideFilter = null; S.limit = 300; render(); };
+      chips.appendChild(gf);
+    }
     t.appendChild(chips);
   }
 
@@ -603,7 +690,8 @@
     [
       ["all", "Schedule", "browse & filter"],
       ["plan", "Plan", "your run"],
-      ["now", "Now", "this minute"]
+      ["now", "Now", "this minute"],
+      ["guide", "Guide", "cars & landmarks"]
     ].forEach(function (v) {
       var b = el("button");
       b.appendChild(el("span", "n", v[1]));
@@ -654,7 +742,18 @@
     root.innerHTML = "";
     if (S.view === "now") viewNow(root);
     else if (S.view === "plan") viewPlan(root);
+    else if (S.view === "guide") viewGuide(root);
     else viewDay(root);
+
+    // Arriving from an event's location link: bring that entry into view.
+    if (S.view === "guide" && S.guideTo) {
+      var target = document.getElementById("g-" + S.guideTo);
+      S.guideTo = null;
+      if (target) {
+        target.classList.add("lit");
+        setTimeout(function () { target.scrollIntoView({ block: "start", behavior: "smooth" }); }, 30);
+      }
+    }
 
     syncChrome();
 

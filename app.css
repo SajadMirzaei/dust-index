@@ -597,7 +597,7 @@ nav {
   left: 12px; right: 12px;
   bottom: calc(11px + env(safe-area-inset-bottom, 0px));
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 3px;
   padding: 5px;
   border-radius: 19px;
@@ -688,6 +688,60 @@ nav button .count {
 .actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 14px 14px; }
 .actions.links { padding-top: 0; }
 a.btn.link { text-decoration: none; display: inline-block; color: var(--ink-2); }
+
+/* ---------- guide links on cards + the Guide tab ---------------------- */
+
+.glinks { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.gl {
+  font-family: var(--ui);
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 234, 212, .35);
+  color: var(--el);
+  background: rgba(94, 234, 212, .07);
+}
+.gl.art, .gl.place { border-color: rgba(253, 154, 99, .4); color: var(--phase-dusk); background: rgba(253, 154, 99, .07); }
+.chip.gfilter[aria-pressed="true"] { color: #2e1404; background: var(--phase-dusk); border-color: var(--phase-dusk); }
+
+.guide { display: grid; gap: 10px; padding: 8px 14px 6px; }
+.gcard {
+  padding: 14px 16px;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-card);
+  background: var(--s1);
+  scroll-margin-top: 16px;
+  transition: border-color .4s ease, box-shadow .4s ease;
+}
+.gcard.car { border-left: 3px solid rgba(94, 234, 212, .6); }
+.gcard.art, .gcard.place { border-left: 3px solid rgba(253, 154, 99, .6); }
+.gcard.lit { border-color: var(--el); box-shadow: 0 0 0 1px var(--el), 0 8px 30px -10px var(--el); }
+.ghead { display: flex; align-items: baseline; gap: 10px; }
+.ghead h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 26px;
+  letter-spacing: .03em;
+  line-height: 1;
+  color: var(--ink);
+  flex: 1;
+}
+.gcount { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); white-space: nowrap; }
+.gwhere, .gweek { margin-top: 9px; font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+.glab {
+  display: inline-block;
+  margin-right: 8px;
+  font-family: var(--ui);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--phase-dusk);
+}
+.gcard.car .glab { color: var(--el); }
+.gdesc { margin: 9px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.gcard .btn { margin-top: 12px; }
 .btn {
   padding: 12px 16px;
   border: 1px solid var(--hair-2);
