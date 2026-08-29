@@ -374,14 +374,14 @@
     share.onclick = openShare;
     actions.appendChild(share);
     if (SAJI_IDS.length) {
-      var sj = el("button", "btn saji-toggle", (S.sajiPlan ? "✓ " : "") + "Saji" + String.fromCharCode(8217) + "s plan");
+      var sj = el("button", "btn saji-toggle", (S.sajiPlan ? "✓ " : "") + "Saji" + String.fromCharCode(8217) + "s picks");
       sj.setAttribute("aria-pressed", S.sajiPlan ? "true" : "false");
       sj.title = "On: everything on Saji's list is starred for you. Off: pick your own.";
       sj.onclick = function () {
         S.sajiPlan = !S.sajiPlan;
         save(); render();
-        toast(S.sajiPlan ? "Saji's plan on — " + SAJI_IDS.length + " picks starred"
-                         : "Saji's plan off — your own stars only");
+        toast(S.sajiPlan ? "Saji's picks on — " + SAJI_IDS.length + " starred"
+                         : "Saji's picks off — your own stars only");
       };
       actions.appendChild(sj);
       var allIn = SAJI_IDS.every(function (i) { return S.stars.has(i); });
