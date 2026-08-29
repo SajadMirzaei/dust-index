@@ -324,33 +324,20 @@
 
     if (!storageOK) root.appendChild(storageWarning());
 
-    var onNow = EV.filter(function (e) {
+    // One chronological list from this minute forward: sets still running,
+    // then what's next, in clock order. No reshuffling — starred rows sit in
+    // their real slot, and the star filter on Schedule is where you narrow.
+    var list = EV.filter(function (e) {
       var end = e.e == null ? e.b + DEFAULT_LEN : e.e;
-      return e.b <= t && end > t && MUSIC[e.src];
-    }).sort(function (a, b) { return (a.p ? 0 : 1) - (b.p ? 0 : 1); });
-
-    var next = EV.filter(function (e) {
-      return e.b > t && e.b < t + 6 * 60 && (MUSIC[e.src] || S.stars.has(e.i));
+      return end > t && e.b < t + 8 * 60 && (MUSIC[e.src] || isStarred(e) || sajiTag(e));
     }).sort(function (a, b) { return a.b - b.b; });
 
-    var mine = starList().filter(function (e) { return e.b > t - 60; }).slice(0, 12);
-
-    if (mine.length) {
-      root.appendChild(el("div", "sect", "Your run from here"));
-      var w1 = el("div"); renderSimple(w1, mine); root.appendChild(w1);
-    }
-
-    root.appendChild(el("div", "sect", onNow.length ? "Playing right now" : "Nothing playing right now"));
-    if (onNow.length) {
-      var w2 = el("div"); renderSimple(w2, onNow.slice(0, 20)); root.appendChild(w2);
-    }
-
-    root.appendChild(el("div", "sect", "Next six hours"));
-    if (next.length) {
-      var w3 = el("div"); renderSimple(w3, next.slice(0, 40)); root.appendChild(w3);
+    root.appendChild(el("div", "sect", "From now · next 8 hours"));
+    if (list.length) {
+      var w = el("div"); renderList(w, list, conflictSet(), false); root.appendChild(w);
     } else {
       root.appendChild(emptyNode("Quiet stretch",
-        "No music sets in the next six hours. Try Everything for camp events, food and workshops."));
+        "No sets in the next eight hours. Schedule has everything else — camp events, food, workshops."));
     }
   }
 
@@ -528,14 +515,22 @@
     rail.innerHTML = "";
     var today = playaDay(nowMin());
 
+    // A day earns a pill only if something happens on it in the current
+    // mode — Mon Sep 7 is empty in playa mode (its small hours belong to
+    // Sunday night) but real in calendar mode.
+    var count = {};
+    EV.forEach(function (e) { var k = eDay(e); count[k] = (count[k] || 0) + 1; });
+    var shown = DAYS.map(function (d, i) { return i; }).filter(function (i) { return count[i]; });
+
     var all = el("button", "day all");
     all.setAttribute("aria-selected", S.day === ALL ? "true" : "false");
     all.appendChild(el("span", "dow", "All"));
-    all.appendChild(el("span", "dat", "9 nights"));
+    all.appendChild(el("span", "dat", shown.length + " nights"));
     all.onclick = function () { S.day = ALL; S.limit = 300; window.scrollTo(0, 0); render(); };
     rail.appendChild(all);
 
     DAYS.forEach(function (d, i) {
+      if (shown.indexOf(i) < 0) return;
       var b = el("button", "day");
       if (/BURN/i.test(d.note)) b.classList.add("burn");
       if (i === today) b.classList.add("today");
