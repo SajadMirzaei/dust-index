@@ -1,5 +1,5 @@
 /* Cache everything on install so the app opens with no network at all. */
-const CACHE = "dust-index-20260831-1314";
+const CACHE = "dust-index-20260831-1441";
 const ASSETS = [
   "./", "./index.html", "./app.css", "./app.js", "./data.js",
   "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"
